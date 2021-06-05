@@ -6,3 +6,5 @@ The illumination model is a simple flat shading model [http://en.wikipedia.org/w
 
 This (pythonized) Tcl/Tk code is based on polyhedra.tcl (2005) by Gerard Sookahet, Tcl wiki [https://wiki.tcl-lang.org/page/3D+polyhedra+with+simple+tk+canvas]
 
+[Screenshot](https://github.com/Blokkendoos/tk3DPolyhedra/blob/main/Schermafbeelding%202021-06-05%20om%2018.45.41.png)
+
