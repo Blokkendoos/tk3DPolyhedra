@@ -85,8 +85,10 @@ class Gui:
         self.root.bind('<Control-q>', self.quit_click)
 
         # pan and zoom stuff
-        self.pan_dir = None
-        self.pan_x = self.pan_y = 0
+        self.pan_x = 0
+        self.pan_y = 0
+        self.pan_x_start = 0
+        self.pan_y_start = 0
 
         self.canvas.bind("<2>", self.mouse_pan_start)
         self.canvas.bind("<B2-Motion>", self.mouse_pan)
@@ -116,38 +118,22 @@ class Gui:
             self.display_poly()
 
     def mouse_pan_start(self, event):
-        self.pan_dir = None
-        self.pan_x = event.x
-        self.pan_y = event.y
+        self.pan_x_start = event.x
+        self.pan_y_start = event.y
+        self.angle_incr = [0.0, 0.0, 0.0]
 
     def mouse_pan(self, event):
-        dx = event.x - self.pan_x
-        dy = event.y - self.pan_y
-        self.pan_x = event.x
-        self.pan_y = event.y
-
-        # on pan start, determine the pan direction
-        diff = 2
-        if self.pan_dir is None:
-            self.angle_incr = [0.0, 0.0, 0.0]
-            if abs(dx) > diff and abs(dy) > diff:
-                self.pan_dir = Direction.DIAGONAL
-            elif abs(dx) > diff:
-                self.pan_dir = Direction.HORIZONTAL
-            elif abs(dy) > diff:
-                self.pan_dir = Direction.VERTICAL
-
-        if abs(dx) > diff or abs(dy) > diff:
-            if self.pan_dir == Direction.DIAGONAL:
-                self.angle_incr[2] += np.sign(dx) * self.angle_step
-            elif self.pan_dir == Direction.HORIZONTAL:
-                self.angle_incr[0] += np.sign(dx) * self.angle_step
-            elif self.pan_dir == Direction.VERTICAL:
-                self.angle_incr[1] += np.sign(dy) * self.angle_step
-
-            if self.pan_dir is not None:
-                self.angle = np.add(self.angle, self.angle_incr)
-                self.display_poly(False)
+        dx = event.x - self.pan_x_start
+        dy = event.y - self.pan_y_start
+        diff = 5
+        if abs(dx) > diff and abs(dy) > diff:
+            self.angle_incr[2] += np.sign(dx) * self.angle_step
+        elif abs(dx) > diff:
+            self.angle_incr[0] += np.sign(dx) * self.angle_step
+        elif abs(dy) > diff:
+            self.angle_incr[1] += np.sign(dy) * self.angle_step
+        self.angle = np.add(self.angle, self.angle_incr)
+        self.display_poly(False)
 
     def quit_click(self, event):
         self.root.destroy()
