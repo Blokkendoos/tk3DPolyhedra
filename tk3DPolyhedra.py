@@ -185,7 +185,7 @@ class Gui:
             if normal[2] < 0.0:  # normal_vector.z is negative
                 if self.shaded:
                     grad = (100 + (154 * intensity(normal) / 32))  # color gradation
-                    color = "#0000{:02x}".format(round(grad))
+                    color = "#0000{:02x}".format(int(grad))
                 else:
                     color = ''  # no color (wireframe)
                 pvertices = self.projection_2d(vertices)
