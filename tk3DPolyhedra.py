@@ -51,7 +51,8 @@ class Gui:
         self.speed_max = 10
         self.wire_clr = 'gray'  # wireframe edge color
         self.text_clr = 'white'
-        self.shaded = True
+        self.shaded = tk.BooleanVar()
+        self.shaded.set(True)
 
         self.label = tk.Label(root, text="Platonic solids")
         # self.label.pack()
@@ -61,12 +62,10 @@ class Gui:
         self.canvas.pack(fill='both', padx='2m', pady='2m')
 
         # buttons
-        b1 = tk.Button(root, text="Wire", command=self.wire_click)
-        b1.bind('<Return>', self.wire_click)
+        b1 = tk.Radiobutton(root, text="Wire", variable=self.shaded, value=False, command=self.style_click)
         b1.pack(fill=tk.NONE, side=tk.LEFT)
 
-        b2 = tk.Button(root, text="Shade", command=self.shade_click)
-        b2.bind('<Return>', self.shade_click)
+        b2 = tk.Radiobutton(root, text="Shade", variable=self.shaded, value=True, command=self.style_click)
         b2.pack(fill=tk.NONE, side=tk.LEFT)
 
         b3 = tk.Button(root, text="Animate", command=self.animate_click)
@@ -98,12 +97,7 @@ class Gui:
 
         self.display_poly()
 
-    def wire_click(self):
-        self.shaded = False
-        self.display_poly(False)
-
-    def shade_click(self):
-        self.shaded = True
+    def style_click(self):
         self.display_poly(False)
 
     def scale_changed(self, event):
@@ -169,7 +163,7 @@ class Gui:
         text = self.canvas.create_text(10, 10, text=self.poly.whoami(), fill=self.text_clr, font='Helvetica 15')
         self.canvas.itemconfigure(text, state=tk.DISABLED, anchor=tk.NW)
 
-        if self.shaded:
+        if self.shaded.get():
             outline = ''  # no outline color
         else:
             outline = self.wire_clr
@@ -183,7 +177,7 @@ class Gui:
 
             # backface ceiling for hidden face. Not removed but reduced to a point.
             if normal[2] < 0.0:  # normal_vector.z is negative
-                if self.shaded:
+                if self.shaded.get():
                     grad = (100 + (154 * intensity(normal) / 32))  # color gradation
                     color = "#0000{:02x}".format(int(grad))
                 else:
